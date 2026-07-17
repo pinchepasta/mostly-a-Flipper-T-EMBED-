@@ -1,0 +1,5 @@
+# Name,   Type, SubType, Offset,  Size, Flags
+# Partition table for 4MB flash boards (Waveshare ESP32-C6-LCD-1.47)
+nvs,      data, nvs,     ,        0x6000,
+phy_init, data, phy,     ,        0x1000,
+factory,  app,  factory, ,        0x3E0000,

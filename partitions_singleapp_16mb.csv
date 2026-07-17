@@ -1,0 +1,17 @@
+# Name,   Type, SubType,   Offset,    Size,      Flags
+# ---------------------------------------------------------------------------
+# Single-app layout for 16 MB flash boards (LilyGo T-Embed CC1101).
+#
+#   factory = this ESP32 Flipper Zero port (the only app image)
+#
+# nvs keeps the exact offset/size of the former multi-boot table (0x9000 /
+# 0x6000) so existing NVS data (settings, BT bonds) survives the switch.
+#
+# Bootloader occupies 0x0..0x8000 on the ESP32-S3, the partition table lives at
+# 0x8000 (CONFIG_PARTITION_TABLE_OFFSET); the first partition follows at 0x9000.
+# App partitions must be 64 KB aligned, so factory lands at 0x10000.
+# ---------------------------------------------------------------------------
+nvs,        data, nvs,       0x9000,    0x6000,
+phy_init,   data, phy,       0xf000,    0x1000,
+factory,    app,  factory,   0x10000,   0xA00000,
+coredump,   data, coredump,  0xa10000,  0x20000,
