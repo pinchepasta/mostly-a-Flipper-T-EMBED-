@@ -14,4 +14,6 @@ And of course I made sure all external hardware like the chameleon ultra is impl
 CC1101 and nrf24 work just fine and detect and decode rolling code key fobs for example.
 NFC and RFID are 99% there, I only have very little NFC bugs left to remove.
 
+<b>What's it aiming at?</b> I'll try to jampack the whole thing to fit my personal rf centric workflow.
+
 This project is a work in progress
