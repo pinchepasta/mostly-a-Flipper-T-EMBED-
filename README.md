@@ -1,5 +1,8 @@
 <h2>mostly-a-Flipper T-EMBED</h2>
 mostly-a-Flipper T-EMBED is a custom firmware based on the <a href="https://github.com/Sor3nt/Flipper-Zero-ESP32-Port" target="_blank">esp32 port of the Flipper Zero</a>  firmware for Lilygo T-Embed CC1101 Plus.
+<br>
+<br>
+<img src="https://github.com/pinchepasta/mostly-a-Flipper-T-EMBED-/blob/main/gummel.jpg" alt="FLR" width="45%" height="45%">
 <br><br>
 
 <img src="https://github.com/pinchepasta/mostly-a-Flipper-T-EMBED-/blob/main/1.png" alt="FLR" width="25%" height="25%"> <img src="https://github.com/pinchepasta/mostly-a-Flipper-T-EMBED-/blob/main/tsl.png" alt="FLR" width="25%" height="25%"> <img src="https://github.com/pinchepasta/mostly-a-Flipper-T-EMBED-/blob/main/br0.png" alt="FLR" width="25%" height="25%">
