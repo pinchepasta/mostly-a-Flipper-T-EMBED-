@@ -28,6 +28,7 @@
 #include <esp_log.h>
 #include <esp_mac.h>
 #include <nvs_flash.h>
+#include <esp_task_wdt.h>
 
 #include <furi_ble/gap.h>
 
@@ -216,12 +217,24 @@ static void serial_try_start_advertising_locked(void) {
     if(serial_state.active->connected) { ESP_LOGW(TAG, "  blocked: connected"); return; }
 
     ESP_LOGI(TAG, "  -> calling esp_ble_gap_start_advertising");
+    serial_state.advertising = true;
+    serial_unlock_global();
+
+    // Temporarily disable task WDT for this blocking operation
+    // esp_ble_gap_start_advertising can take several seconds
+    esp_task_wdt_delete(xTaskGetCurrentTaskHandle());
+    
     esp_err_t err = esp_ble_gap_start_advertising(&serial_adv_params);
-    if(err == ESP_OK) {
-        serial_state.advertising = true;
-        ESP_LOGI(TAG, "  -> advertising started OK");
-    } else {
+    
+    // Re-subscribe to task WDT
+    esp_task_wdt_add(xTaskGetCurrentTaskHandle());
+
+    serial_lock_global();
+    if(err != ESP_OK) {
+        serial_state.advertising = false;
         ESP_LOGE(TAG, "  -> start_advertising failed: %s", esp_err_to_name(err));
+    } else {
+        ESP_LOGI(TAG, "  -> advertising started OK");
     }
 }
 
@@ -1119,14 +1132,26 @@ error:
 void ble_serial_free(BleSerial* serial) {
     if(!serial) return;
 
+    bool was_advertising = false;
     serial_lock_global();
     if(serial_state.advertising) {
-        esp_ble_gap_stop_advertising();
+        was_advertising = true;
         serial_state.advertising = false;
     }
     serial_state.advertising_requested = false;
     if(serial_state.active == serial) serial_state.active = NULL;
     serial_unlock_global();
+
+    if(was_advertising) {
+        // Temporarily disable task WDT for this blocking operation
+        // esp_ble_gap_stop_advertising can take several seconds
+        esp_task_wdt_delete(xTaskGetCurrentTaskHandle());
+        
+        esp_ble_gap_stop_advertising();
+        
+        // Re-subscribe to task WDT
+        esp_task_wdt_add(xTaskGetCurrentTaskHandle());
+    }
 
     if(serial_state.app_registered) {
         esp_ble_gatts_app_unregister(serial->gatts_if);
@@ -1257,8 +1282,19 @@ void ble_serial_stop_advertising(void) {
     serial_lock_global();
     serial_state.advertising_requested = false;
     if(serial_state.advertising) {
-        esp_ble_gap_stop_advertising();
         serial_state.advertising = false;
+        serial_unlock_global();
+
+        // Temporarily disable task WDT for this blocking operation
+        // esp_ble_gap_stop_advertising can take several seconds
+        esp_task_wdt_delete(xTaskGetCurrentTaskHandle());
+        
+        esp_ble_gap_stop_advertising();
+        
+        // Re-subscribe to task WDT
+        esp_task_wdt_add(xTaskGetCurrentTaskHandle());
+        
+        return;
     }
     serial_unlock_global();
 }

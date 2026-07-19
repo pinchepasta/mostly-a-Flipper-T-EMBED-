@@ -502,5 +502,4 @@ void rpc_send_and_release_empty(RpcSession* session, uint32_t command_id, PB_Com
     };
 
     rpc_send_and_release(session, &message);
-    pb_release(&PB_Main_msg, &message);
 }

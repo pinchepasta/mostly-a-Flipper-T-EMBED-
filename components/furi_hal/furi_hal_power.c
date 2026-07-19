@@ -426,14 +426,19 @@ void furi_hal_power_shutdown(void) {
     gpio_set_level((gpio_num_t)BOARD_PIN_PWR_EN, 0);
 #endif
 
-    /* Wake on the BOOT/encoder button (GPIO0, active low). Its external
-     * boot-strapping pull-up keeps it HIGH across deep sleep, so it does not
-     * re-wake immediately — unlike the side key (GPIO6), which floats LOW and
-     * rebooted the device instantly (regression from the multi-boot PR). */
+    /* Wake on the BOOT/encoder button. Use an explicit pull-up and a clean
+     * wake-source setup so the pin does not float during deep sleep and cause
+     * a spurious reset/reboot loop when the device resumes. */
+    gpio_num_t wake_pin = (gpio_num_t)BOARD_PIN_BUTTON_BOOT;
+    gpio_set_direction(wake_pin, GPIO_MODE_INPUT);
+    gpio_pullup_en(wake_pin);
+    gpio_pulldown_dis(wake_pin);
+    gpio_hold_dis(wake_pin);
+    esp_sleep_disable_wakeup_source(ESP_SLEEP_WAKEUP_ALL);
 #if SOC_PM_SUPPORT_EXT0_WAKEUP
-    esp_sleep_enable_ext0_wakeup((gpio_num_t)BOARD_PIN_BUTTON_BOOT, 0);
+    esp_sleep_enable_ext0_wakeup(wake_pin, 0);
 #else
-    esp_deep_sleep_enable_gpio_wakeup(BIT(BOARD_PIN_BUTTON_BOOT), ESP_GPIO_WAKEUP_GPIO_LOW);
+    esp_deep_sleep_enable_gpio_wakeup(BIT(wake_pin), ESP_GPIO_WAKEUP_GPIO_LOW);
 #endif
     /* Clear the deep-sleep GPIO auto-hold bit. It lives in the RTC domain
      * (RTC_CNTL_DIG_ISO_REG) and SURVIVES resets/panics, so a firmware that once
@@ -444,6 +449,7 @@ void furi_hal_power_shutdown(void) {
      * why the reboot persisted across re-flashes. Disabling it unconditionally
      * makes power-off deterministic regardless of what ran before. */
     gpio_deep_sleep_hold_dis();
+    ESP_LOGI(TAG, "Entering deep sleep; wake on GPIO%d", wake_pin);
     esp_deep_sleep_start();
 }
 
