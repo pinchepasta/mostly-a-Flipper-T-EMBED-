@@ -19,4 +19,15 @@ NFC and RFID are 99% there, I only have very little NFC bugs left to remove.
 
 <b>What's it aiming at?</b> I'll try to jampack the whole thing to fit my personal rf centric workflow.
 
-This project is a work in progress
+<b>This project is a work in progress</b>
+<br> 
+
+---
+
+
+<h2>BUGFIXES:</h2>
+
+<b>v.0.3: Overall system stability is now pretty good, and all Qflipper related soft reset issues got resolved too, it's a nice firmware now.
+<br>
+
+---
