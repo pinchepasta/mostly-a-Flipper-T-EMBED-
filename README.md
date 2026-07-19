@@ -27,7 +27,7 @@ NFC and RFID are 99% there, I only have very little NFC bugs left to remove.
 
 <h2>BUGFIXES:</h2>
 
-<b>v.0.3: Overall system stability is now pretty good, and all Qflipper related soft reset issues got resolved too, it's a nice firmware now.
+<b>v.0.3:</b> Overall system stability is now pretty good, and all Qflipper related soft reset issues got resolved too, it's a nice firmware now.
 <br>
 
 ---
