@@ -34,6 +34,15 @@ NFC and RFID are 99% there, I only have very little NFC bugs left to remove.
 
 
 <h2>What I'm working on:</h2>
+
+<b>mostly-a-Flipper Appstore</b>: I'm working on an appstore with esp32 compiled apps, that makes it easier for the user to install and delete new applications.
+
+-
+
+<b>Custom QFlipper Android/iOS:</b> I'm building a custom QFlipper app for both android and iOS devices, to make installing apps via appstore and a few other things much easier on the user side of things, some might call it convenient.
+
+-
+
 <b>nrf24 Jammer:</b> It emmits data but it doesn't seem to disrupt any real connection like 2.4GHz wifi or BLE adv for example, and I'm about to fix that.
 
 <br>
