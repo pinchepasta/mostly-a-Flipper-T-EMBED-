@@ -37,5 +37,6 @@ NFC and RFID are 99% there, I only have very little NFC bugs left to remove.
 <b>nrf24 Jammer:</b> It emmits data but it doesn't seem to disrupt any real connection like 2.4GHz wifi or BLE adv for example, and I'm about to fix that.
 
 <br>
----
-<br>
+
+---   
+
